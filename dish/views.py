@@ -3,27 +3,22 @@ from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 
 from .models import Dish
-from .serializers import DishListSerializer, DishCreateSerializer, \
-    DishSerializer
+from .serializers import *
 
 class DishListAPIView(APIView):
-    # queryset = Dish.objects.order_by('name')
-    # serializer_class = DishListSerializer()
-
     def get(self, request, *args, **kwargs):
         dishes = Dish.objects.order_by('name')
         dishes_serialized = DishListSerializer(dishes, many=True)
         return Response(data=dishes_serialized.data)
 
-  
 class DishCreateAPIView(APIView):
     def post(self, request, *args, **kwargs):
-        data = request.post
+        data = request.POST
         serializer = DishCreateSerializer(data=data)
         if serializer.is_valid():
             dish_object = serializer.save()
             return Response(data={'message': 'блюдо добавлено успешно'})
-        return Response(data=serializer.error)
+        return Response(data=serializer.errors)
 
 class DishUpdateAPIView(APIView):
     def put(self, request, *args, **kwargs):
@@ -42,3 +37,15 @@ class DishUpdateAPIView(APIView):
             return Response(data=json_data)
         return Response(data=serializer.error)
  
+
+class DishDetailAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        dish_object = Dish.objects.get(pk=kwargs.get('pk'))
+        serializer = DishSerializer(instance=dish_object)
+        return Response(data=serializer.data)
+
+class DishDeleteAPIView(APIView):
+    def delete(self, request, *args, **kwargs):
+        dish = Dish.objects.get(pk=kwargs.get('pk'))
+        dish.delete()
+        return Response(data={'message': 'блюдо удалено'})
