@@ -17,8 +17,8 @@ class DishCreateAPIView(APIView):
         serializer = DishCreateSerializer(data=data)
         if serializer.is_valid():
             dish_object = serializer.save()
-            return Response(data={'message': 'блюдо добавлено успешно'})
-        return Response(data=serializer.errors)
+            return Response(data={'message': 'блюдо добавлено успешно'}, status=201)
+        return Response(data=serializer.errors, status=400)
 
 class DishUpdateAPIView(APIView):
     def put(self, request, *args, **kwargs):
