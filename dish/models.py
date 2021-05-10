@@ -5,6 +5,8 @@ from django.db import models
 class Dish(models.Model):
     name = models.CharField(max_length=255)
     price = models.IntegerField()
+    is_available = models.BooleanField(default=True)
+    calories = models.IntegerField(null=True, blank=True, default=0)
 
     class Meta:
         verbose_name = 'блюдо'
