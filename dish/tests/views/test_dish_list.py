@@ -70,17 +70,19 @@ class TestDishCreateAPITestCase(APITestCase):
         expected_data = {"detail": "Method \"GET\" not allowed."}
         self.assertEqual(response.data, expected_data)
 
-def test_create_dish_without_data_400(self):
-         response = self.client.post(
-             path=self.url,
-             data={"name": "Test"}
-         )
+    def test_create_dish_without_data_400(self):
+        response = self.client.post(
+            path=self.url,
+            data={"name": "Test"}
+        )
 
-         expected_data = {
-             "price": [
-                 "This field is required."
-             ]
-         }
+        expected_data = {
+            "price": [
+                "This field is required."
+            ]
+        }
 
-         self.assertEqual(response.data, expected_data)
-         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data, expected_data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
