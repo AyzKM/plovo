@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
+from rest_framework import status
 
 from .models import Dish
 from .serializers import *
@@ -40,12 +41,15 @@ class DishUpdateAPIView(APIView):
 
 class DishDetailAPIView(APIView):
     def get(self, request, *args, **kwargs):
-        dish_object = Dish.objects.get(pk=kwargs.get('pk'))
-        serializer = DishSerializer(instance=dish_object)
-        return Response(data=serializer.data)
+        try:
+            dish_object = Dish.objects.get(pk=kwargs.get('pk'))
+            serializer = DishSerializer(instance=dish_object)
+            return Response(data=serializer.data)
+        except Dish.DoesNotExist as e:
+            return Response(data=f"{e}", status=status.HTTP_404_NOT_FOUND)
 
 class DishDeleteAPIView(APIView):
     def delete(self, request, *args, **kwargs):
         dish = Dish.objects.get(pk=kwargs.get('pk'))
         dish.delete()
-        return Response(data={'message': 'блюдо удалено'})
+        return Response(data={'message': 'блюдо удалено'}, status=status.HTTP_204_NO_CONTENT)
